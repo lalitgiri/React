@@ -5,10 +5,10 @@ class ContactList extends Component {
 
     
     render() {
-        const people =  this.props.people;
+        const contacts =  this.props.contacts;
 
-        return <ol className = 'text-color'>
-            {people.map(person => (
+        return <ol className = 'contact-list'>
+            {contacts.map(person => (
                 <li key={person.name}>{person.name} </li>
             ))}
         </ol>;
