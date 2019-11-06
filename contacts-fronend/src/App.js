@@ -7,20 +7,20 @@ const contacts = [
   {
     "id": "ryan",
     "name": "Ryan Florence",
-    "email": "ryan@reacttraining.com",
-    "avatarURL": "http://localhost:5001/ryan.jpg"
+    "email": "ryan@abc.com",
+    "avatarURL": "http://localhost:5001/Avatar_1.png"
   },
   {
     "id": "michael",
     "name": "Michael Jackson",
-    "email": "michael@reacttraining.com",
-    "avatarURL": "http://localhost:5001/michael.jpg"
+    "email": "michael@abc.com",
+    "avatarURL": "http://localhost:5001/Avatar_2.png"
   },
   {
     "id": "tyler",
     "name": "Tyler McGinnis",
-    "email": "tyler@reacttraining.com",
-    "avatarURL": "http://localhost:5001/tyler.jpg"
+    "email": "tyler@abc.com",
+    "avatarURL": "http://localhost:5001/Avatar_3.jpg"
   }
 ]
 
