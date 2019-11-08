@@ -9,19 +9,19 @@ const defaultData = {
       id: 'ryan',
       name: 'Ryan Florence',
       email: 'ryan@reacttraining.com',
-      avatarURL: config.origin + '/ryan.jpg'
+      avatarURL: config.origin + '/Avatar_1.png'
     },
     {
       id: 'michael',
       name: 'Michael Jackson',
       email: 'michael@reacttraining.com',
-      avatarURL: config.origin + '/michael.jpg'
+      avatarURL: config.origin + '/Avatar_2.png'
     },
     {
       id: 'tyler',
       name: 'Tyler McGinnis',
       email: 'tyler@reacttraining.com',
-      avatarURL: config.origin + '/tyler.jpg'
+      avatarURL: config.origin + '/Avatar_3.jpg'
     }
   ]
 }
