@@ -3,6 +3,7 @@ import './contact-list-component.css';
 import PropTypes from 'prop-types';
 import escapeRegExp from 'escape-string-regexp';
 import sortBy from 'sort-by';
+import { Link } from 'react-router-dom'
 
 class ContactList extends Component {
 
@@ -46,11 +47,12 @@ class ContactList extends Component {
                     value={this.state.query}
                     onChange={(event) => this.updateQuery(event.target.value)} />
 
-                <a
+                {/* <a
                     href='create'
                     onClick={() => { }}
                     className="add-contact"
-                >Add Contact</a>
+                >Add Contact</a> */}
+                <Link to='/create' className='add-contact'>Add Contacts</Link>
             </div>
 
             {showingContacts.length !== contacts.length && (
