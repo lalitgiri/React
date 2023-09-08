@@ -6,7 +6,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import NumericCellEditor from "./numeric-cell-editor.component.js";
+import DatePicker from "../UI/date-picker.js";
+import Dropdown from "../UI/drop-down.js";
+import NumericCellEditor from "../UI/numeric-cell-editor.component.js";
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional theme CSS
@@ -16,62 +18,101 @@ const GridComponent = () => {
   const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
 
   const cellEditorSelector = (params) => {
-    // if (params.data.type === 'age') {
+    const { colDef, value } = params;
+    if (colDef.type === "Number") {
       return {
         component: NumericCellEditor,
       };
-    // }
-    // if (params.data.type === 'gender') {
-    //   return {
-    //     component: 'agRichSelectCellEditor',
-    //     params: {
-    //       values: ['Male', 'Female'],
-    //     },
-    //     popup: true,
-    //   };
-    // }
-    // if (params.data.type === 'mood') {
-    //   return {
-    //     component: MoodEditor,
-    //     popup: true,
-    //     popupPosition: 'under',
-    //   };
-    // }
-    // return undefined;
+    }
+
+    if (colDef.type === "Select") {
+      return {
+        component: Dropdown,
+        params: {
+          defaultValue: value,
+          options: [
+            {
+              value: "jack",
+              label: "Jack",
+            },
+            {
+              value: "lucy",
+              label: "Lucy",
+            },
+            {
+              value: "Yiminghe",
+              label: "yiminghe",
+            },
+            {
+              value: "disabled",
+              label: "Disabled",
+              disabled: true,
+            },
+          ],
+          stopEditing,
+        },
+      };
+    }
+
+    if (colDef.type == "Date") {
+      return {
+        component: DatePicker,
+        params: {
+          defaultValue: null,
+          stopEditing,
+        },
+      };
+    }
+
+    return undefined;
   };
 
   // Each Column Definition results in one Column.
   const [columnDefs, setColumnDefs] = useState([
     {
       field: "make",
-      filter: true,      
+      filter: true,
       editable: true,
       //   width: "100%",
     },
     {
       field: "model",
       filter: true,
-      //   width: "100%",
       editable: true,
-      cellEditor: "agSelectCellEditor",
-      cellEditorParams: {
-        values: ["Test", "Test 2", "Test 3"],
+      cellEditorSelector: cellEditorSelector,
+      type: "Select",
+      suppressKeyboardEvent: (param) => {
+        return param.editing && param.event.key === "Enter";
       },
     },
     {
       field: "price",
-      //   width: "100%",
       cellRenderer: (param) => {
         const value = param.value;
-        return <label>{value}</label>;
+        return <label>$ {value}</label>;
       },
+      type: "Number",
       editable: true,
       cellEditorSelector: cellEditorSelector,
-    //   cellEditor: NumericCellEditor,
-      //   cellEditor: "agTextCellEditor",
-      //   cellEditorParams: {
-      //     values: ["Test", "Test 2", "Test 3"],
-      //   },
+    },
+    {
+      field: "Date",
+      cellRenderer: (param) => {
+        const value = param.value?.toString();
+        return <label>$ {value}</label>;
+      },
+      type: "Date",
+      editable: true,
+      suppressKeyboardEvent: (param) => {
+        return (
+          param.editing &&
+          (param.event.key === "Enter" || param.event.key === "Tab")
+        );
+      },
+      cellEditorSelector: cellEditorSelector,
+      // onCellValueChanged: (param) => {
+      //   console.log("cell value changed", param);
+      // },
     },
   ]);
 
@@ -79,18 +120,6 @@ const GridComponent = () => {
   const defaultColDef = useMemo(() => ({
     sortable: true,
   }));
-
-  // Example of consuming Grid Event
-  //   const cellClickedListener = useCallback((event) => {
-  //     console.log("cellClicked", event);
-  //   }, []);
-
-  //   const onCellKeyDown = useCallback((event) => {
-  //     const { colDef } = event;
-  //     const { key } = event.event;
-  //     if (key === "Enter" && colDef.onEnterEvent)
-  //       console.log("on enter", event, colDef);
-  //   }, []);
 
   // Example load data from server
   useEffect(() => {
@@ -105,16 +134,22 @@ const GridComponent = () => {
   }, []);
 
   const onGridReady = useCallback((params) => {
-    gridRef.current.api.sizeColumnsToFit({
-      // defaultMinWidth: 100,
-      // columnLimits: [{ key: 'country', minWidth: 900 }],
-    });
+    gridRef.current.api.sizeColumnsToFit({});
   }, []);
 
+  const stopEditing = useCallback(() => {
+    gridRef.current.api.stopEditing();
+  });
+
+  const onCellEditingStopped = useCallback((param) => {
+    // gridRef.current.api.ensureColumnVisible(param.column.colId);
+    gridRef.current.api.setFocusedCell(param.rowIndex, param.column.colId);
+  });
   return (
     <div>
       {/* Example using Grid's API */}
-      <button onClick={buttonListener}>Push Me</button>
+
+      <button onClick={buttonListener}>Deselct Rows</button>
 
       {/* On div wrapping Grid a) specify theme CSS Class Class and b) sets Grid size */}
       <div className="ag-theme-alpine" style={{ width: "100vw", height: 500 }}>
@@ -126,6 +161,7 @@ const GridComponent = () => {
           animateRows={true} // Optional - set to 'true' to have rows animate when sorted
           rowSelection="multiple" // Options - allows click selection of rows
           onGridReady={onGridReady}
+          onCellEditingStopped={onCellEditingStopped}
         />
         {/* onCellClicked={cellClickedListener} // Optional - registering for Grid Event
           onCellKeyDown={onCellKeyDown} */}

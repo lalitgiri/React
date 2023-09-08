@@ -9,9 +9,6 @@ const HomePage = () => {
         <h1>Home</h1>
         <div>AG-Grid Example with react</div>
         <Link to={"/grid"}> To Grid</Link>
-        {/* <p>
-        <button onClick={navigateHandler}>Navigate</button>
-      </p> */}
       </div>
     </>
   );
