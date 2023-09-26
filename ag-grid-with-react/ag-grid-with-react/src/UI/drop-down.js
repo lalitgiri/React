@@ -15,6 +15,7 @@ export default forwardRef((props, ref) => {
   const options = props.options || [];
   const defaultValue = props.defaultValue;
   const stopEditing = props.stopEditing;
+
   const createInitialState = () => {
     let startValue;
 
